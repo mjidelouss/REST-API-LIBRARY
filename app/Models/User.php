@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+use App\Models\Comment;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -59,6 +60,11 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function comment()
+    {
+        return $this->hasMany(Comment::class);
     }
 
 }
