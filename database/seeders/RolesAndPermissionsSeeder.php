@@ -7,71 +7,65 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
+//use Spatie\Permission\Models\Role;
+
 class RolesAndPermissionsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
+     * @return void
      */
-    public function run(): void
-{
-    // Reset cached roles and permissions
-    app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+    public function run()
+    {
+        // Reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-    // Define permissions
-    $permissions = [
-        'add article',
-        'edit my article',
-        'edit every article',
-        'delete my article',
-        'delete every article',
-        'show category',
-        'add category',
-        'edit category',
-        'delete category',
-        'show tag',
-        'add tag',
-        'edit tag',
-        'delete tag',
-        'add comment',
-        'edit my comment',
-        'edit every comment',
-        'delete my comment',
-        'delete every comment',
-        'show role',
-        'add role',
-        'edit role',
-        'delete role',
-        'assign role',
-    ];
+        // Create permissions for books
+        Permission::create(['name' => 'add book']);
+        Permission::create(['name' => 'edit every book']);
+        Permission::create(['name' => 'edit my book']);
+        Permission::create(['name' => 'delete every book']);
+        Permission::create(['name' => 'delete my book']);
 
-    // Create permissions
-    foreach ($permissions as $permission) {
-        Permission::create(['name' => $permission]);
+        // Create permissions for genres
+        Permission::create(['name' => 'show genre']);
+        Permission::create(['name' => 'add genre']);
+        Permission::create(['name' => 'edit genre']);
+        Permission::create(['name' => 'delete genre']);
+
+        // Create permissions for Roles
+        Permission::create(['name' => 'show role']);
+        Permission::create(['name' => 'add role']);
+        Permission::create(['name' => 'edit role']);
+        Permission::create(['name' => 'delete role']);
+        Permission::create(['name' => 'assign role']);
+
+        // Create permissions for Profile
+        Permission::create(['name' => 'edit my profile']);
+        Permission::create(['name' => 'edit every profile']);
+        Permission::create(['name' => 'delete my profile']);
+        Permission::create(['name' => 'delete every profile']);
+
+        // Create permission for assigning permissions to roles
+        Permission::create(['name' => 'assign permission']);
+
+        Role::create(['name' => 'admin'])
+            ->givePermissionTo(Permission::all());
+
+        Role::create(['name' => 'receptionist'])
+            ->givePermissionTo(
+                'add book',
+                'edit my book',
+                'delete my book',
+                'edit my profile',
+                'delete my profile'
+            );
+
+        Role::create(['name' => 'user'])
+            ->givePermissionTo(
+                'edit my profile',
+                'delete my profile'
+            );
     }
-
-    // Define roles and their permissions
-    $roles = [
-        'admin' => Permission::all(),
-        'publisher' => [
-            'add article',
-            'edit my article',
-            'delete my article',
-            'add comment',
-            'edit my comment',
-            'delete my comment',
-        ],
-        'user' => [
-            'add comment',
-            'edit my comment',
-            'delete my comment',
-        ],
-    ];
-
-    // Create roles and assign permissions
-    foreach ($roles as $name => $permissions) {
-        $role = Role::create(['name' => $name]);
-        $role->givePermissionTo($permissions);
-    }
-}
-
 }

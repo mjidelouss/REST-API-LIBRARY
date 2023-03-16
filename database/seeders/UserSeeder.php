@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
             ->create()
             ->each(
                 function ($user) {
-                    $user->assignRole('publisher');
+                    $user->assignRole('receptionist');
                 }
             );
 
