@@ -21,7 +21,11 @@ class BookController extends Controller
      */
     public function index()
     {
+        $books = Book::all();
 
+        return response()->json([
+            'Books' => $books,
+        ]);
     }
 
     /**
@@ -32,16 +36,22 @@ class BookController extends Controller
      */
     public function store(Request  $request)
     {
-        
+        $user = Auth::user();
+        $book = Book::create($request->all() + ['user_id' => $user->id]);
+
+        return response()->json([
+            'Message' => 'Book added successfully!',
+            'Book' => $book,
+        ], 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Article  $article
+     * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function show(Article  $article)
+    public function show(Book  $book)
     {
         
     }
@@ -50,10 +60,10 @@ class BookController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Article  $article
+     * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Article $article)
+    public function update(Request $request,Book $book)
     {   
 
     }
@@ -61,10 +71,10 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Article  $article
+     * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Article $article)
+    public function destroy(Book $book)
     {
         
     }
