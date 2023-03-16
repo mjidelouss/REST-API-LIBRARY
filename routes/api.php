@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\BookController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
@@ -15,9 +16,20 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('refresh', 'refresh');
     Route::post('forget-password', [PasswordResetController::class, 'sendEmail']);
     Route::post('reset-password', [NewPasswordController::class, 'passwordResetProcess']);
+
     // Profile
     Route::controller(ProfileController::class)->group(function () {
         Route::put('user/{user}', 'update')->middleware('permission:edit my profile|edit every profile');
         Route::delete('user/{user}', 'destroy')->middleware('permission:delete my profile|delete every profile');
+    });
+
+    // Books
+    Route::group(['controller' => BookController::class], function ()
+    {
+        Route::get('books', 'index');
+        Route::post('book', 'store')->middleware('permission:add book');
+        Route::get('book/{id}', 'show')->middleware('permission:show book');
+        Route::put('book/{id}', 'update')->middleware('permission:edit every book|edit my book');
+        Route::delete('book/{id}', 'destroy')->middleware('permission:delete every book|delete my book');
     });
 });
