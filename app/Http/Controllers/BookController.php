@@ -51,9 +51,15 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function show(Book  $book)
+    public function show($id)
     {
-        
+        $book = Book::find($id);
+        if ($book) {
+            $response = response()->json($book, 200);
+        } else {
+            $response = response()->json(['message' => "Book with (id : {$id}) doesn't exist!",]);
+        }
+        return $response;
     }
 
     /**
@@ -63,9 +69,19 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Book $book)
+    public function update(Request $request, $id)
     {   
+        $book = Book::find($id);
 
+        if(!$book){
+            return response()->json(['message' => "Book with (id : {$id} doesn't exist!)"]);
+        }
+        $book->update($request->all());
+
+        return response()->json([
+            'Message' => 'Book updated Successfully!!',
+            'book' => $book,
+        ], 200);
     }
 
     /**
@@ -74,8 +90,17 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Book $book)
+    public function destroy($id)
     {
-        
+        $book = Book::find($id);
+
+        if(!$book){
+            return response()->json(['message' => "Book with (id : {$id} doesn't exist!)"]);
+        }
+        $book->delete();
+
+        return response()->json([
+            'Message' => 'Book deleted Successfully!!'
+        ], 200);
     }
 }

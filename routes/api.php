@@ -28,7 +28,7 @@ Route::controller(AuthController::class)->group(function () {
     {
         Route::get('books', 'index');
         Route::post('book', 'store')->middleware('permission:add book');
-        Route::get('book/{id}', 'show')->middleware('permission:show book');
+        Route::get('book/{id}', 'show');
         Route::put('book/{id}', 'update')->middleware('permission:edit every book|edit my book');
         Route::delete('book/{id}', 'destroy')->middleware('permission:delete every book|delete my book');
     });
