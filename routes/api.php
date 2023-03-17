@@ -46,4 +46,21 @@ Route::controller(AuthController::class)->group(function () {
         Route::put('genre/{id}', 'update')->middleware('permission:edit genre');
         Route::delete('genre/{id}', 'destroy')->middleware('permission:delete genre');
     });
+
+    // Roles
+    Route::group(['controller' => RoleController::class], function()
+    {
+        Route::get('roles', 'index')->middleware('permission:show role');
+        Route::post('role', 'store')->middleware('permission:add role');
+        Route::get('role/{id}', 'show')->middleware('permission:show role');
+        Route::put('role/{id}', 'update')->middleware('permission:edit role');
+        Route::delete('role/{id}', 'destroy')->middleware('permission:delete role');
+        Route::post('assign-role/{id}', 'assignRole')->middleware('permission:assign role');
+        Route::post('remove-role/{id}', 'removeRole')->middleware('permission:assign role');
+
+    });
+
+    // Permissions
+    Route::post('assign-permission/{role}', [PermissionController::class,'assignPermissionToRole'])->middleware('permission:assign permission');
+    Route::delete('remove-permission/{role}', [PermissionController::class,'removePermissionFromRole'])->middleware('permission:assign permission');
 });
