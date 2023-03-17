@@ -8,6 +8,7 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\GenreController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
@@ -35,4 +36,14 @@ Route::controller(AuthController::class)->group(function () {
 
     // Filter By Genre
     Route::get('filter/{genre}', [BookController::class, 'filter']);
+
+    // Genres
+    Route::group(['controller' => GenreController::class], function ()
+    {
+        Route::get('genres', 'index')->middleware('permission:show genre');
+        Route::post('genre', 'store')->middleware('permission:add genre');
+        Route::get('genre/{id}', 'show')->middleware('permission:show genre');
+        Route::put('genre/{id}', 'update')->middleware('permission:edit genre');
+        Route::delete('genre/{id}', 'destroy')->middleware('permission:delete genre');
+    });
 });

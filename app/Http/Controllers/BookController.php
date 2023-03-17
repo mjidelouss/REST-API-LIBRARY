@@ -58,7 +58,7 @@ class BookController extends Controller
         if ($book) {
             $response = response()->json($book, 200);
         } else {
-            $response = response()->json(['message' => "Book with (id : {$id}) doesn't exist!",]);
+            $response = response()->json(['message' => "Book with #$id not Found!!",]);
         }
         return $response;
     }
@@ -75,7 +75,7 @@ class BookController extends Controller
         $book = Book::find($id);
 
         if(!$book){
-            return response()->json(['message' => "Book with (id : {$id} doesn't exist!)"]);
+            return response()->json(['message' => "Book with #$id not Found!!"]);
         }
         $book->update($request->all());
 
@@ -103,7 +103,7 @@ class BookController extends Controller
         $book = Book::find($id);
 
         if(!$book){
-            return response()->json(['message' => "Book with (id : {$id} doesn't exist!)"]);
+            return response()->json(['message' => "Book with #$id not Found!!"]);
         }
         $book->delete();
 
