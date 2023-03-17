@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Genre extends Model
 {
     use HasFactory;
+
+    protected $hidden = ['id', 'created_at', 'updated_at'];
+    protected $fillable = ['name'];
+
+    public function books(){
+        $this->hasMany(Book::class);
+    }
 }

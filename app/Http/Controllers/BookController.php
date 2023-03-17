@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\Genre;
 use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
@@ -82,6 +83,13 @@ class BookController extends Controller
             'Message' => 'Book updated Successfully!!',
             'book' => $book,
         ], 200);
+    }
+    
+    public function filter($gen)
+    {
+        $genre = Genre::where('name', $gen)->firstOrFail();
+        $books = Book::where('genre_id', $genre->id)->get();
+        return response()->json($books);
     }
 
     /**
