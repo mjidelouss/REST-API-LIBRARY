@@ -9,6 +9,7 @@ use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\PermissionsController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
@@ -56,11 +57,13 @@ Route::controller(AuthController::class)->group(function () {
         Route::put('role/{id}', 'update')->middleware('permission:edit role');
         Route::delete('role/{id}', 'destroy')->middleware('permission:delete role');
         Route::post('assign-role/{id}', 'assignRole')->middleware('permission:assign role');
-        Route::post('remove-role/{id}', 'removeRole')->middleware('permission:assign role');
+        Route::delete('remove-role/{id}', 'removeRole')->middleware('permission:assign role');
 
     });
 
     // Permissions
-    Route::post('assign-permission/{role}', [PermissionController::class,'assignPermissionToRole'])->middleware('permission:assign permission');
-    Route::delete('remove-permission/{role}', [PermissionController::class,'removePermissionFromRole'])->middleware('permission:assign permission');
+    Route::controller(PermissionsController::class)->group(function () {
+        Route::post('assign-permission/{role}', 'assignPermission')->middleware('permission:assign permission');
+        Route::delete('remove-permission/{role}', 'removePermission')->middleware('permission:assign permission');
+    });
 });
