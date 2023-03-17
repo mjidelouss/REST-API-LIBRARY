@@ -25,6 +25,7 @@ class BookController extends Controller
         $books = Book::all();
 
         return response()->json([
+            'status' => 'success',
             'Books' => $books,
         ]);
     }
@@ -41,6 +42,7 @@ class BookController extends Controller
         $book = Book::create($request->all() + ['user_id' => $user->id]);
 
         return response()->json([
+            'status' => 'success',
             'Message' => 'Book added successfully!',
             'Book' => $book,
         ], 201);
@@ -58,7 +60,9 @@ class BookController extends Controller
         if ($book) {
             $response = response()->json($book, 200);
         } else {
-            $response = response()->json(['message' => "Book with #$id not Found!!",]);
+            $response = response()->json([
+                'message' => "Book with #$id not Found!!"
+            ]);
         }
         return $response;
     }
@@ -80,6 +84,7 @@ class BookController extends Controller
         $book->update($request->all());
 
         return response()->json([
+            'status' => 'success',
             'Message' => 'Book updated Successfully!!',
             'book' => $book,
         ], 200);
@@ -108,6 +113,7 @@ class BookController extends Controller
         $book->delete();
 
         return response()->json([
+            'status' => 'success',
             'Message' => 'Book deleted Successfully!!'
         ], 200);
     }

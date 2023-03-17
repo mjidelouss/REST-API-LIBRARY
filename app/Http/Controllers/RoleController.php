@@ -36,7 +36,6 @@ class RoleController extends Controller
             'status' => true,
             'message' => 'Role added successfully!',
             'role' => $role
-
         ], 201);
     }
 
@@ -46,13 +45,18 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\jsonResponse
      */
-    public function show(Role $role)
+    public function show($id)
     {
-        $role->find($role->id);
+        $role = Role::find($id);
         if(!$role){
-            return response()->json(['message' => 'This role doesn\'t exist!']);
+            return response()->json([
+                'message' => 'Role Not Found!!'
+            ]);
         }
-        return response()->json($role, 200);
+        return response()->json([
+            'status' => 'success',
+            'role' => $role->name
+        ]);
     }
 
     /**
@@ -62,9 +66,16 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\jsonResponse
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, $id)
     {
+        $role = Role::find($id);
+        if(!$role){
+            return response()->json([
+                'message' => 'Role Not Found!!'
+            ]);
+        }
         $role->update($request->all());
+
         return response()->json([
             'status' => true,
             'message' => 'Role updated successfully!',
@@ -79,8 +90,15 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\jsonResponse
      */
-    public function destroy(Role $role)
+    public function destroy($id)
     {
+        $role = Role::find($id);
+        if(!$role){
+            return response()->json([
+                'message' => 'Role Not Found!!'
+            ]);
+        }
+
         $role->delete();
         return response()->json([
             'status' => true,
@@ -88,16 +106,45 @@ class RoleController extends Controller
         ], 200);
     }
 
-    public function giveRole(Request $request, $id) {
+    public function assignRole(Request $request, $id)
+    {
         $user = User::find($id);
-        if (!$user)
+        if(!$user)
         {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json([
+                'Message' => 'This user doesn\'t exist!'
+            ]);
         }
-        $user->assignRole($request->role);
+
+        $user->syncRoles([$request->name]);
+
         return response()->json([
-            'status' => true,
-            'message' => 'Role assigned successfully!',
-        ], 200);
+            'Message' => 'Role assigned Successfully!!',
+        ]);
+    }
+
+    public function removeRole(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'Message' => "This user doesn't exist!"
+            ]);
+        }
+
+        $roleName = $request->name;
+
+        if(!$user->hasRole($roleName)){
+            return response()->json([
+                'Message' => "This user doesn't have #$roleName role!"
+            ]);
+        }
+
+        $user->removeRole($roleName);
+
+        return response()->json([
+            'Message' => 'Role Removed Successfully!!',
+        ]);
     }
 }
