@@ -32,4 +32,7 @@ Route::controller(AuthController::class)->group(function () {
         Route::put('book/{id}', 'update')->middleware('permission:edit every book|edit my book');
         Route::delete('book/{id}', 'destroy')->middleware('permission:delete every book|delete my book');
     });
+
+    // Filter By Genre
+    Route::get('filter/{genre}', [BookController::class, 'filter']);
 });
